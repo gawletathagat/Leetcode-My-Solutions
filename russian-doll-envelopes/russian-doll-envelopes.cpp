@@ -1,26 +1,47 @@
 class Solution {
 public:
-    int maxEnvelopes(vector<vector<int>>& e) 
-    {
-        sort(e.begin() , e.end() ) ;
+    int binarySearch(vector<int> & arr, vector<int> & temp, int end, int val){
+        int start = 0;
+        int len = end;
+        while(start <= end){
+            int mid = start + (end - start)/2;
+            if(arr[temp[mid]] < val)
+                start = mid+1;
+            else
+                end = mid-1;
+        }
+        return start;
         
-        // Now LIS 
-        int n = e.size() ;
-        vector<int>t(n, 1) ;
-        
-        for( int i= 0; i<n ; i++)
-        {
-            for( int j= 0 ; j<i; j++)
-            {
-                if( e[i][0] > e[j][0] && e[i][1] > e[j][1] )
-                {
-                   t[i] = max( t[i] , t[j]+ 1) ; 
-                }
+    }
+    
+    int lis(vector<int> & arr){
+        vector<int> temp(arr.size(), 0);
+        int len = 0;
+        for(int i=1;i<arr.size();i++){
+            if(arr[i] > arr[temp[len]]){
+                len++;
+                temp[len] = i;
+            }
+            else if(arr[i] < arr[temp[0]])
+                temp[0] = i;
+            else{
+                int index = binarySearch(arr, temp, len, arr[i]);
+                temp[index] = i;
             }
         }
-        
-        return *max_element( t.begin() , t.end() ) ;
-        
+        return len+1;
+    }
+    
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        if(envelopes.size() == 0 || envelopes.size() == 1)
+            return envelopes.size();
+        sort(envelopes.begin(), envelopes.end(), [](const auto & lhs, const auto & rhs){
+            return lhs[0] == rhs[0] ? lhs[1] > rhs[1]: lhs[0] < rhs[0];
+        });
+        vector<int> arr;
+        for(int i=0;i<envelopes.size();i++)
+            arr.push_back(envelopes[i][1]);
+        return lis(arr);
         
     }
 };
