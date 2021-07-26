@@ -1,31 +1,42 @@
 class Solution {
 public:
-    int change(int amount, vector<int>& coins)
+    int change(int target, vector<int>& nums)
     {
         // unbounded Knapsack tc -O(n2) alwasys see the constrains 1 <= coins.length <= 300 
-        int n = coins.size() ;
-        int m = amount ;
+//        int dp[amount + 1];
         
-        vector<vector<int>>t( n+ 1, vector<int>(m+ 1, 0 ) ) ;
+//         memset(dp,0,sizeof(dp));
         
-        for( int i= 0 ; i<n+ 1 ; i++) t[i][0]= 1;
-        for( int j= 0 ; j<m+ 1; j++) t[0][j] = 0 ;
+//         dp[0] = 1;
         
-        for( int i= 1; i<n+ 1; i++)
+//         for (const auto & c : coins) 
+//             for (int i = 0; i <= amount; ++i) 
+//                {
+//                 if(i-c >= 0 )
+//                    dp[i] += dp[i - c]; 
+                
+//                }   
+        
+//         return dp[amount];
+        long long int n = nums.size();
+        
+        int dp[target+1];
+        
+        memset(dp,0,sizeof(dp));
+        
+        dp[0] = 1;
+        
+        for(long long int i=0; i<n; i++)
         {
-            for( int j= 1; j<m+ 1; j++)
+            for(long long int j =0; j<target+1; j++)
             {
-                if( j >= coins[i-1] )
-                {
-                    t[i][j] = t[i-1][j] + t[i][j-coins[i-1]] ;
-                }
-                else 
-                {
-                    t[i][j] = t[i-1][j] ;
-                }
+                 if(j>=nums[i])
+                     dp[j] += dp[j-nums[i]];
             }
+            // for(int k=0;k<target+1; k++)
+            //     cout<<dp[k]<<" ";
+            // cout<<endl;
         }
-        
-        return t[n][m] ;    
+        return dp[target];
     }
 };
