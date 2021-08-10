@@ -32,9 +32,7 @@ public:
 	int ans = str.length()-1;
 	for (int k = i; k <= j - 1; k++)
 	{
-	// 	int tempans = solve(str, i, k) +
-	// 	              solve(str, k + 1, j) + 1;
-        if(isPalin(str, i, k))
+	 	if(isPalin(str, i, k))
         {
             int tempans = 1+solve(str, k+1, j);
             if (tempans < ans)
