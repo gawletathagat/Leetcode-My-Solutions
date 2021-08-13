@@ -1,42 +1,30 @@
 class Solution {
 public:
+    
     vector<vector<int>>t ;
     
-    int rec( vector<int>&piles, int start , int end )
+    int rec( int start , int end , vector<int>&p )
     {
-        if( start >= end ) return piles[start];
+        if( start > end ) return 0 ;
+          
+        if( t[start][end] != -1) return t[start][end ];
         
-        if( end - start  == 1) return max( piles[start] , piles[end ])  ; 
+        int front = p[start]  - rec( start + 1, end,  p );
+        int back =  p[end]    - rec( start , end- 1 , p ) ;
         
-        /// space for memoization 
-        if( t[start][end] != -1) return t[start][end] ;
-        
-        int front =  piles[start] + min(rec( piles, start+ 1, end-1) , rec( piles, start+ 2, end));
-        
-        int back =  piles[end] + min(rec( piles, start+ 1, end-1) , rec( piles, start , end-2) );
-        
-       
-        return t[start][end]  = max( front , back) ;
-        
+        return t[start][end] = max( front , back ) ;
     }
     
-    bool stoneGame(vector<int>& piles)
+    bool stoneGame(vector<int>& p) 
     {
-        // like knapsack we have a choice to pick from last and first , we we try every way
-        // suppose we are alice so we make our sum as much as possible 
+         // Alice - Bob + Alice - Bob 
         
-       
-        int n = piles.size() ;
+        // sum = max sum of alice that she can acchive  - max sum of bob that he can acchive
         
-        t.resize( n+ 1, vector<int>( n+ 1, -1) ) ;
+        t.resize( p.size() + 1, vector<int>( p.size()+ 1, -1)) ;
         
-        int max_alice_sum =  rec( piles, 0, n-1) ;
+        int sum = rec(0 , p.size()-1,  p) ;
         
-        int bob = accumulate( piles.begin() , piles.end() , 0 ) - max_alice_sum ;
-        
-        
-        cout<<max_alice_sum <<" "<<bob<<endl;
-        
-        return (max_alice_sum > bob) ? true : false ;
+        return sum > 0  ;
     }
 };
