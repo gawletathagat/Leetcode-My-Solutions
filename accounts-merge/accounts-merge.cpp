@@ -1,63 +1,77 @@
 class Solution {
 public:
-    
-    int findParent( vector<int>&parent , int i)
+     
+    int findP( int u , vector<int>&p )
     {
-        if( parent[i] == i) return i ;
-        return parent[i] = findParent( parent, parent[i] ) ;
+        if( u == p[u]) return p[u] ;
+        return p[u] = findP( p[u] , p) ;
     }
     
-    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts)
+    void Union( int u, int v, vector<int>&p )
     {
-        // Disjoint set , union find
-        int n = accounts.size() ;
-        vector<int>parent(n, 0 ) ;
-        unordered_map<string, int> email ;
+        u = findP(u, p);
+        v = findP(v, p) ;
         
-        for( int i = 0 ; i<n ; i++) 
+      //  if( u!= v)
+            p[u] = v ;
+    }
+    
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) 
+    {
+        int n = accounts.size() ;
+        vector<int>p( n) ;
+        
+        for( int i= 0 ; i<n ; i++)
         {
-            parent[i] = i ;
-            
+            p[i] =i;   // make parent
+        }
+        
+        
+        unordered_map<string, int>mp ;
+        for(int i= 0; i<accounts.size() ; i++ )
+        {
             for( int j= 1; j<accounts[i].size() ; j++)
             {
-                if( email.find(accounts[i][j]) != email.end() ) 
+                if( mp.find(accounts[i][j]) != mp.end() )  // is this email as found earlier 
                 {
-                    int f1 = findParent( parent , i) ;
-                    int f2 = findParent( parent , email[accounts[i][j]] ) ;
-                    
-                    parent[f1] = f2 ;
+                    Union( i , mp[accounts[i][j]] , p ) ;   // this email "i" , is found on "mp[accounts[i][j]]" index before so we merge them
                 }
                 else 
-                {
-                    email[accounts[i][j]] = i;
-                }
+                    mp[accounts[i][j]] = i;    // email, name_index
             }
         }
         
-        unordered_map<int , vector<string> > mres ;  // this is ower ans , unsorted
-        for( auto it : email)
+        // we got the answer , but in unsorted manner
+        
+       unordered_map<int, vector<string>> mres ;
+        for( auto x: mp)           // x.first = emails, x.second = names
         {
-            int f = findParent(parent, it.second );
-            mres[f].push_back(it.first );
+            int u = x.second ;         // all name index
+            cout<<u<<" ";             
+            
+            int v = findP(u , p) ;   // all unique name index 
+            
+            mres[v].push_back(x.first) ;     // names, emails
         }
         
-        
-        vector<vector<string>>res ;
-        for( auto it: mres)
+        vector<vector<string>>ans ;
+        for( auto x :mres)
         {
-            sort( it.second.begin(), it.second.end() ) ;
+            sort(x.second.begin() , x.second.end() ) ;   
+        
+            vector<string>temp ;
+            temp.push_back(accounts[x.first][0]) ;  // add person name
             
-            vector<string>temp = {accounts[it.first][0] } ;
+            for( auto it: x.second)  // x.first == person name , x.second = emails
+            {
+               // cout<<it<<" ";
+                temp.push_back(it) ;   // then all its emails
+            }
             
-            for( auto i: it.second ) temp.push_back(i) ;
-            
-            res.push_back( temp ) ;
+            ans.push_back(temp) ;   // add this all info about a person in ans
         }
         
-        return res;
-        
-        
-        
+        return ans ;
         
     }
 };
