@@ -1,51 +1,46 @@
 class Solution {
 public:
     
-    vector<int> dp,v;
-    int n,mx;
-
-    int ans(int pos)
+    vector<int>dp ;
+    
+    int rec( int i , vector<int>&arr, int d)
     {
-        if(dp[pos]!=-1)
+        if( i<0 || i>= arr.size() ) return 0;
+        
+        if( dp[i] != -1) return dp[i] ;
+        
+        int ans = 1;
+        int n = arr.size() ;
+        int low = max(i-d ,0) ;
+        int high =min( i+d , n-1) ;
+        
+        for( int j = i-1 ; j>=low ; j--)
         {
-            return dp[pos];
+            if( arr[j] >= arr[i] ) break;
+            ans = max( ans , 1+ rec( j , arr, d)) ;
         }
         
-        int an=1;
-        for(int i=pos+1;(i<n)&&(i<=(pos+mx));i++)
+        for( int j= i+ 1; j<=high ;j++)
         {
-            if(v[i]>=v[pos])
-            {
-                break;
-            }
-            an=max(an,1+ans(i));
-            dp[pos]=an;
+            if( arr[j] >= arr[i] ) break;
+            ans = max( ans , 1+ rec( j , arr, d) ) ;
         }
         
-        for(int i=pos-1;(i>=0)&&(i>=(pos-mx));i--)
-        {
-            if(v[i]>=v[pos])
-            {
-                break;
-            }
-            an=max(an,1+ans(i));
-            dp[pos]=an;
-        }
-        return an;
+         return dp[i] = ans ;
     }
     
-    
-    int maxJumps(vector<int>& arr, int d) {
-        n=arr.size();
-        mx=d;
-        dp.resize(n,-1);
-        v=arr;
+    int maxJumps(vector<int>& arr, int d)
+    {
         
-        int an=0;
-        for(int i=0;i<n;i++)
+        dp.resize( arr.size() , -1) ;
+        
+        int max_jump = 0;
+        for( int i= 0; i<arr.size() ; i++)
         {
-            an=max(an,ans(i));
+            int jump = rec( i, arr,d ) ;
+            max_jump = max( max_jump, jump ) ;
         }
-        return an;
+            
+        return max_jump ;
     }
 };
