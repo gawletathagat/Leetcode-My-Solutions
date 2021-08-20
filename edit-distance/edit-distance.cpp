@@ -10,13 +10,13 @@ public:
         int n1 = word1.size() ;
         int n2 = word2.size() ;
         
-        if( n1== 0) return n2;
-        if( n2==0 ) return n1 ;
+        // if( n1== 0) return n2;
+        // if( n2==0 ) return n1 ;
         
-        vector<vector<int>>t(n1+ 1 , vector<int>(n2+ 1, INT_MAX) ) ;
+        vector<vector<int>>t(n1+ 1 , vector<int>(n2+ 1) ) ;
         
-        for( int i= 0; i<n1; i++) t[i][0] = i;
-        for( int j= 0; j<n2; j++) t[0][j] = j;
+        for( int i= 0; i<n1+ 1; i++) t[i][0] = i;
+        for( int j= 0; j<n2+ 1; j++) t[0][j] = j;
         
         for( int i= 1; i<n1+ 1; i++)
         {
