@@ -1,40 +1,32 @@
 class Solution {
 public:
     
-    bool rec( string s, unordered_set<string>&dict )
-    { 
-        if(dict.size()==0) return false;
+    vector<int>dp;
+    
+    bool rec( int start,unordered_set<string>&st , string& s )
+    {
+        if( start == s.size() ) return true ;
         
-        vector<bool> dp(s.size()+1,false);
+        if( dp[start] != -1 ) return dp[start] ;
         
-        dp[0]=true;
-        
-        for(int i=1;i<=s.size();i++)
+        for( int i= start+ 1 ; i<=s.size() ; i++)
         {
-            for(int j=i-1;j>=0;j--)
+            string temp = s.substr( start , i- start ) ;
+            
+            if( st.find(temp) != st.end() ) 
             {
-                if(dp[j])
-                {
-                    string word = s.substr(j,i-j);
-                    if(dict.find(word)!= dict.end())
-                    {
-                        dp[i]=true;
-                        break; //next i
-                    }
-                }
+                if( rec( i, st, s) ) return dp[start] = true;
             }
         }
-        
-        return dp[s.size()];
+        return dp[start] = false; 
     }
     
-    bool wordBreak(string s, vector<string>& wordDict) 
+    bool wordBreak(string s, vector<string>& wordDict)
     {
-        unordered_set<string> mp(wordDict.begin() , wordDict.end()) ;
+        unordered_set<string>st(wordDict.begin() , wordDict.end() );
         
-         //both are correct //mp.insert(wordDict.begin() , wordDict.end()) ;
-        //Wrong //for( int i=0; i<wordDict.size() ; i++) mp[wordDict[i]]  ;
+        dp.resize( s.size()+ 1, -1) ;
         
-        return rec(s, mp) ;
+        return rec( 0, st, s) ;
     }
 };
