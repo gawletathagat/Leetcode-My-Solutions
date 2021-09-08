@@ -1,22 +1,30 @@
 class Solution {
 public:
-    int maxProfit(vector<int>& p, int fee) 
+    
+    int rec( vector<int>&prices, vector<vector<int>>&dp , int fee, int i, bool can_sell )
     {
-        int n = p.size() ;
+        if( i == prices.size() )return 0 ;
         
-        vector<int>buy_profit(n, 0 );
-        vector<int>sold_profit( n, 0) ;
+        if( dp[can_sell][i] != -1) return dp[can_sell][i] ;
         
-        buy_profit[0] = - p[0];
-        
-        for( int i= 1; i<n ; i++)
+        if( can_sell == false)  // time to buy 
         {
-            buy_profit[i] = max( buy_profit[i-1] , sold_profit[i-1] - p[i] ) ;
-            
-            sold_profit[i] = max( sold_profit[i-1] , buy_profit[i-1]+ p[i]- fee) ;
+            dp[can_sell][i] = max( rec(prices,dp,fee,i+1,true)-prices[i]  , rec(prices,dp,fee,i+1,false) ) ;
+        }
+        if( can_sell == true)  //time to sell
+        {
+            dp[can_sell][i] = max( rec(prices,dp,fee,i+1,false)+prices[i]-fee , rec(prices,dp,fee,i+1,true)) ; 
         }
         
-        return sold_profit[n-1 ] ;
+        return dp[can_sell][i] ;
+    }
+    
+    int maxProfit(vector<int>& prices, int fee)
+    {
+        // brute force -> just to understarnd the constrains 
+        int n = prices.size() ;
+        vector<vector<int>>dp(2, vector<int>(n, -1) ) ;
         
+        return rec( prices, dp, fee, 0, false) ;   
     }
 };
