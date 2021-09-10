@@ -9,13 +9,13 @@ public:
         
         if( dp[start] != -1 ) return dp[start] ;
         
-        for( int i= start+ 1 ; i<=s.size() ; i++)
+        for( int i= start ; i<=s.size() ; i++)
         {
-            string temp = s.substr( start , i- start ) ;
+            string temp = s.substr( start , i- start+1) ;
             
             if( st.find(temp) != st.end() ) 
             {
-                if( rec( i, st, s) ) return dp[start] = true;
+                if( rec( i+1, st, s) ) return dp[start] = true;
             }
         }
         return dp[start] = false; 
