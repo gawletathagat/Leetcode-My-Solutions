@@ -18,7 +18,8 @@ public:
             return dp[i][j] = solve(s , t , i + 1 , j, dp);
         }
     }
-    int numDistinct(string &s, string &t) {
+    int numDistinct(string &s, string &t) 
+    {
         vector<vector<int>>dp( s.size()+ 1, vector<int>(t.size() + 1, -1)) ;
       
         return solve(s , t , 0 , 0, dp);
