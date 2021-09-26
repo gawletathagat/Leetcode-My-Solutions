@@ -1,47 +1,51 @@
-
 struct meet{
     int start, end, profit ;
 };
 
 class Solution {
 public:
-    static int cmp( meet a, meet b)
+    
+    static bool cmp(meet a , meet b )
     {
-        return a.end < b.end ; // starting order of end time
+        return a.end < b.end ;
     }
     
-    int jobScheduling(vector<int>& s, vector<int>& e, vector<int>& profit)
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) 
     {
-        vector<meet>m(s.size()) ;
-        for( int i= 0 ; i<s.size() ; i++)
+        vector<meet>m( startTime.size()) ;
+        for( int i= 0 ; i<startTime.size() ; i++)
         {
-            m[i].start = s[i] ;
-            m[i].end = e[i] ;
+            m[i].start = startTime[i] ;
+            m[i].end = endTime[i] ;
             m[i].profit = profit[i] ;
         }
         
-        sort(m.begin() , m.end() , cmp) ;
-       
+        sort( m.begin() , m.end() , cmp );
         
-        int t[s.size()];   // track max_profit upto
+        vector<int>curr_profit( startTime.size(), 0) ;
         
-        t[0] = m[0].profit ;
+        curr_profit[0] = m[0].profit ;
+        int ans =INT_MIN ;
         
-        for( int i= 1 ;i<s.size() ; i++)   // 0---->job[j]--->job[i]-----> job[s.size()] 
+        for( int i= 1 ; i<startTime.size() ; i++)
         {
-            int upto_profit = 0;
-            for( int j= i-1 ; j>= 0 ; j--)
+            int temp_profit = 0;
+            
+            for( int j= i-1; j>=0; j--)
             {
-                if( m[i].start >= m[j].end )
+                if( m[i].start >= m[j].end ) 
                 {
-                    upto_profit = t[j] ;
+                    // curr_profit[i] = max( curr_profit[i] , m[i].profit ) ;
+                    temp_profit = curr_profit[j] ;
                     break;
+                   // curr_profit[i] = max( curr_profit[i-1] , curr_profit[j] + m[i].profit )
                 }
             }
-            t[i] = max( t[i-1] , upto_profit + m[i].profit )  ;
+            
+            curr_profit[i] = max( curr_profit[i-1] , temp_profit + m[i].profit ) ;
         }
         
-        return t[s.size()-1] ;
+        return curr_profit[startTime.size() -1] ;
         
     }
 };
