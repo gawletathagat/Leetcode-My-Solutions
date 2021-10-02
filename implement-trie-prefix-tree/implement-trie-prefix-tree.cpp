@@ -3,50 +3,46 @@ public:
     
     struct TrieNode
     {
-       TrieNode* child[26] ;
-       bool isEnd ;  // default false ;
+        TrieNode* child[26] ;
+        bool endPoint = false;
     };
     
     TrieNode* root ;
     
     Trie() 
     {
-        //https://www.youtube.com/watch?v=BN-SUKeOYC0
         root = new TrieNode() ;
     }
     
-    void insert(string word) 
+    void insert(string word)
     {
-        TrieNode* curr = root ;
+       TrieNode* curr = root ;
         for( int i= 0 ; i<word.size() ; i++)
         {
-            char ch = word[i] ;
-            
-            if( curr->child[ch-'a'] == NULL)
+            if( curr->child[word[i]-'a'] == NULL)
             {
-                curr->child[ch-'a'] = new TrieNode() ;
+                curr->child[word[i]-'a'] = new TrieNode() ;
             }
-            
-           curr = curr->child[ch-'a'] ; 
+            curr = curr->child[word[i]-'a'] ;
         }
         
-        curr->isEnd = true;  
+        curr->endPoint = true;
     }
     
-    bool search(string word) 
+    bool search(string word)
     {
         TrieNode* curr = root ;
         for( int i= 0 ; i<word.size() ; i++)
         {
-            char ch = word[i] ;
-            
-            if( curr->child[ch-'a']== NULL) return false;
-            
-            curr = curr->child[ch-'a'] ;
+            if( curr->child[word[i]-'a'] != NULL )
+            {
+                curr = curr->child[word[i]-'a'] ;
+            }
+            else 
+                return false ;
         }
         
-        return curr->isEnd ;
-        
+        return curr->endPoint ;
     }
     
     bool startsWith(string word)
@@ -54,14 +50,15 @@ public:
         TrieNode* curr = root ;
         for( int i= 0 ; i<word.size() ; i++)
         {
-            char ch = word[i] ;
-            
-            if( curr->child[ch-'a'] == NULL) return false; 
-            
-            curr = curr->child[ch-'a'] ;
+            if( curr->child[word[i]-'a'] != NULL) 
+            {
+                curr = curr->child[word[i]-'a'] ;
+            }
+            else
+                return false; 
         }
-        return true;
         
+        return true ;
     }
 };
 
