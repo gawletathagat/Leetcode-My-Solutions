@@ -1,3 +1,4 @@
+[Discussion Post (created on 4/9/2021 at 19:27)](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/1503019/C%2B%2B-striver-solution)  
 <h2>863. All Nodes Distance K in Binary Tree</h2><h3>Medium</h3><hr><div><p>Given the <code>root</code> of a binary tree, the value of a target node <code>target</code>, and an integer <code>k</code>, return <em>an array of the values of all nodes that have a distance </em><code>k</code><em> from the target node.</em></p>
 
 <p>You can return the answer in <strong>any order</strong>.</p>
