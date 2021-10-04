@@ -1,65 +1,52 @@
 class Solution {
 public:
     
-    vector<vector<int>>t ;
+    vector<vector<int>>dp_change ;
+    vector<vector<int>>dp_partion ;
     
-    int count_distint( string& s, int i , int j)
+    int min_change( string& s, int start , int end)
     {
-        int count = 0 ;
-        while( i<j)
+        if( dp_change[start][end] != -1) return dp_change[start][end] ;
+       
+        int not_same = 0 ;
+        int i= start, j = end ;
+       
+        while( i< j)
         {
-            if( s[i] != s[j]) count++;
+            if( s[i++] != s[j--] ) not_same++ ;
+        }
+        
+        return dp_change[start][end] = not_same ;
+    }
+    
+    
+    int partion_fxn( string& s, int start , int rem_partion)
+    {
+          if( dp_partion[start][rem_partion] != -1) return dp_partion[start][rem_partion] ;
+        
+        if( start == s.size() ) return 1e9 ;
+        
+        if( rem_partion ==0 ) return min_change( s, start, s.size()-1 ) ;
+        
+        int ans = 1e9 ;
+        
+        for( int i = start ; i<s.size() ; i++)
+        {
+            int no_of_change = min_change( s, start, i) ; 
             
-            i++;
-            j-- ;
+            ans = min( ans , no_of_change + partion_fxn( s, i+ 1, rem_partion-1 ) ) ;
         }
         
-        return count;
+        return dp_partion[start][rem_partion] = ans ;
     }
     
-    int rec( int i, int k , string& s)
-    {
-        if( i >= s.size() )
-        {
-            if( k==0 ) return 0 ;
-
-                return 1e5 ;
-        }
-        
-        cout<< i<<" ";
-        
-        if( k==0 ) return 1e5 ;  // b  bccd -> last part to remeaning reh gaya 
-        
-        if( t[i][k] != -1) return t[i][k] ;
-        
-        long long int ans = 1e5 ;
-        
-        for( int j = i ; j<s.size() ; j++)
-        {
-            long long int  prev_count =  count_distint(s, i, j) + rec( j+ 1, k-1, s)  ;
-            //ans = min( ans ,);
-            if( ans > prev_count)
-                ans = prev_count ;
-        }
-        
-        return t[i][k] = ans ;        
-    }
     
-    int palindromePartition(string s, int k) 
+    int palindromePartition(string s, int k)
     {
-        // MCM , we use recursion
+        dp_change.resize( s.size()+ 1, vector<int>(s.size()+ 1, -1) ); 
+        dp_partion.resize( s.size()+ 1, vector<int>(k , -1) ); 
         
-        //aabbccd  , k = 3 , ans == 1
-        int n = s.size() ;
         
-        if( k > s.size()-1) return 0;
-        
-        t.resize(n+ 1, vector<int>( k+ 1, -1) ) ;
-        
-        long long int result = rec( 0 , k , s) ;
-        
-        cout<<result;
-        
-       return result >= 1e5 ? 0 : result ; 
+        return partion_fxn( s, 0 , k-1 ) ;
     }
 };
