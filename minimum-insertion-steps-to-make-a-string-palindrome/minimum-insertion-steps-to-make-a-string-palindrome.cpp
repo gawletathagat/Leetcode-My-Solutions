@@ -1,42 +1,28 @@
 class Solution {
 public:
     
-    int rec( string& p, string& s)
-    {
-        int n = s.size() ;
-        vector<vector<int>>t(n+ 1, vector<int>(n+ 1, 0) ) ;
-        
-       for( int i= 1; i<n+1 ; i++)
-       {
-           for( int j= 1; j<n+1 ; j++)
-           {
-               if( s[i-1] == p[j-1] )
-               {
-                   t[i][j] = 1+ t[i-1][j-1] ;
-               }
-               else 
-               {
-                   t[i][j] = max( t[i-1][j] , t[i][j-1] ) ;
-               }
-           }
-       }
-        
-        return t[n][n] ;
-    }
-        
     
-    int minInsertions(string s) 
+    int rec( string& s, int start, int end, vector<vector<int>>&dp )
     {
-        // total - LCS 
+        if( start >= end ) return 0;
         
-        //now for LCS
-        string p = s ;
-        reverse( s.begin() , s.end() ) ;
+        if( dp[start][end] != -1) return dp[start][end] ;
         
-        int LCS = rec( p , s) ;
-        cout<<LCS ;
+        if( s[start] == s[end] )
+        {
+            return dp[start][end]= rec( s, start+ 1, end-1, dp) ;
+        }
+        else 
+        {
+            return dp[start][end]= 1+ min( rec(s,start+ 1, end, dp) , rec( s, start, end-1, dp)) ; 
+        }
+    }
+    
+    int minInsertions(string s)
+    {
+        if( s.size() <=1) return 0 ;
+        vector<vector<int>>dp( s.size() , vector<int>(s.size(), -1) ) ;
         
-        return s.size()- LCS ;
-        
+       return rec( s, 0, s.size()-1, dp) ;
     }
 };
