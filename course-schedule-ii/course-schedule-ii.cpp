@@ -24,7 +24,7 @@ public:
         vector<int> ans,an;
         for(int i=0;i<numCourses;i++){
             if(vis[i])continue;
-            if(dfs(i,adj,vis,ans))return an;
+            if(dfs(i,adj,vis,ans))return {};
         }
        reverse(ans.begin(),ans.end());
         return ans;
